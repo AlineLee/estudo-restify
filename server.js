@@ -15,10 +15,13 @@ server.pre(function(req, res, next) {
 server.use(restify.plugins.bodyParser());
 server.use(function(req, res, next) {
     console.log('USE: Apenas após ser roteado');
+    console.log(req.header.info);
     if (req.headers.info == '123') {
-      return next();
-    } else {
       return next(false);
+    } else if (req.headers.info == '666') {
+      return next(new Error('boom!'));
+    } else {
+      return next();
     }
   }
 );
@@ -26,7 +29,6 @@ server.use(function(req, res, next) {
 server.get('/hello/:name', respond);
 
 server.get('/', function(req, res, next) {
-  console.log('aqui b');
   res.send('Página Inicial')
   return next();
 });
